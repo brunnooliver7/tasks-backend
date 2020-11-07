@@ -24,6 +24,9 @@ pipeline {
                     -Dsonar.java.binaries=target \
                     -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
                 }
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         // stage ('Quality Gate') {
