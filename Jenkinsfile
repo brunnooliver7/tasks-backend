@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('Build Backend') {
             steps {
-                bat 'mvn clean package -DskipTests=true sonar:sonar'
+                bat 'mvn clean package -DskipTests=true'
             }
         }
         stage ('Unit Tests') {
@@ -26,17 +26,13 @@ pipeline {
                 }
             }
         }
-        stage ('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                    // def qg = waitForQualityGate()
-                    // if (qg.status != 'OK') {
-                    //     error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                    // }
-                }
-            }
-        }
+        // stage ('Quality Gate') {
+        //     steps {
+        //         timeout(time: 1, unit: 'MINUTES') {
+        // //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
         stage ('Deploy Backend') {
             steps {
                 deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
